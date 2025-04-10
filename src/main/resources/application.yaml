@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    openfeign:
+      client:
+        config:
+          database-provider:
+            url: http://localhost:8081
+
+feign:
+  user-api:
+    base-path: /api/route-provider/security
+    endpoints:
+      register: /register
+      login: /login
+      get-user-info: /getUserInfo
+      update-username: /updateUsername
+      get-user-by-email: /getUserByEmail
+
+jwt:
+  secret: {JWT_SECRET}
