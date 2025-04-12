@@ -7,46 +7,46 @@ spring:
         - name: Jwt
           args:
             excludeRoutes:
-              - "/api/security-service"
+              - "/api/security-service/security"
       routes:
         - id: user_routes
-          uri: http://localhost:8081
+          uri: http://${DEV_ENV_HOST_PROVIDER}:8081
           predicates:
             - Path=/api/route-provider/routes/user/**
         - id: user_favorites
-          uri: http://localhost:8081
+          uri: http://${DEV_ENV_HOST_PROVIDER}:8081
           predicates:
             - Path=/api/route-provider/favorites/user/**
         - id: user_sessions
-          uri: http://localhost:8081
+          uri: http://${DEV_ENV_HOST_PROVIDER}:8081
           predicates:
             - Path=/api/route-provider/sessions/user/**
         - id: user_reviews
-          uri: http://localhost:8081
+          uri: http://${DEV_ENV_HOST_PROVIDER}:8081
           predicates:
             - Path=/api/route-provider/reviews/user/**
 
         - id: admin_routes
-          uri: http://localhost:8081
+          uri: http://${DEV_ENV_HOST_PROVIDER}:8081
           predicates:
             - Path=/api/route-provider/routes/admin/**
         - id: admin_favorites
-          uri: http://localhost:8081
+          uri: http://${DEV_ENV_HOST_PROVIDER}:8081
           predicates:
             - Path=/api/route-provider/favorites/admin/**
         - id: admin_sessions
-          uri: http://localhost:8081
+          uri: http://${DEV_ENV_HOST_PROVIDER}:8081
           predicates:
             - Path=/api/route-provider/sessions/admin/**
         - id: admin_reviews
-          uri: http://localhost:8081
+          uri: http://${DEV_ENV_HOST_PROVIDER}:8081
           predicates:
             - Path=/api/route-provider/reviews/admin/**
 
         - id: security
-          uri: http://localhost:8082
+          uri: http://${DEV_ENV_HOST_SECURITY}:8082
           predicates:
             - Path=/api/security-service/security/**
 
 jwt:
-  secret: {JWT_SECRET}
+  secret: ${JWT_SECRET}
