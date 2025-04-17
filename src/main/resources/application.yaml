@@ -43,6 +43,11 @@ spring:
           predicates:
             - Path=/api/route-provider/reviews/admin/**
 
+        - id: admin_metrics
+          uri: http://${DEV_ENV_HOST_PROVIDER}:8081
+          predicates:
+            - Path=/api/route-provider/metrics/admin/**
+
         - id: security
           uri: http://${DEV_ENV_HOST_SECURITY}:8082
           predicates:

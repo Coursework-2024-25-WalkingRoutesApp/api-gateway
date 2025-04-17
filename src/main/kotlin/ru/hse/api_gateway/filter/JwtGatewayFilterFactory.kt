@@ -60,11 +60,11 @@ class JwtGatewayFilterFactory(
                     logger.debug("Token claims extracted: userId={}, role={}", userId, role)
 
                     when {
-                        path.startsWith("/admin") && role != USER_ROLE_ADMIN -> {
+                        path.contains("/admin/") && role != USER_ROLE_ADMIN -> {
                             logger.warn("Access denied to /admin for role '{}'", role)
                             return@GatewayFilter forbidden(exchange)
                         }
-                        path.startsWith("/user") && role !in USER_ROLES_SCOPE -> {
+                        path.contains("/user/") && role !in USER_ROLES_SCOPE -> {
                             logger.warn("Access denied to /user for role '{}'", role)
                             return@GatewayFilter forbidden(exchange)
                         }
