@@ -12,46 +12,51 @@ spring:
         - id: user_routes
           uri: http://${DEV_ENV_HOST_PROVIDER}:8081
           predicates:
-            - Path=/api/route-provider/routes/user/**
+            - Path=/api/data-provider/routes/user/**
         - id: user_favorites
           uri: http://${DEV_ENV_HOST_PROVIDER}:8081
           predicates:
-            - Path=/api/route-provider/favorites/user/**
+            - Path=/api/data-provider/favorites/user/**
         - id: user_sessions
           uri: http://${DEV_ENV_HOST_PROVIDER}:8081
           predicates:
-            - Path=/api/route-provider/sessions/user/**
+            - Path=/api/data-provider/sessions/user/**
         - id: user_reviews
           uri: http://${DEV_ENV_HOST_PROVIDER}:8081
           predicates:
-            - Path=/api/route-provider/reviews/user/**
+            - Path=/api/data-provider/reviews/user/**
 
         - id: admin_routes
           uri: http://${DEV_ENV_HOST_PROVIDER}:8081
           predicates:
-            - Path=/api/route-provider/routes/admin/**
+            - Path=/api/data-provider/routes/admin/**
         - id: admin_favorites
           uri: http://${DEV_ENV_HOST_PROVIDER}:8081
           predicates:
-            - Path=/api/route-provider/favorites/admin/**
+            - Path=/api/data-provider/favorites/admin/**
         - id: admin_sessions
           uri: http://${DEV_ENV_HOST_PROVIDER}:8081
           predicates:
-            - Path=/api/route-provider/sessions/admin/**
+            - Path=/api/data-provider/sessions/admin/**
         - id: admin_reviews
           uri: http://${DEV_ENV_HOST_PROVIDER}:8081
           predicates:
-            - Path=/api/route-provider/reviews/admin/**
+            - Path=/api/data-provider/reviews/admin/**
 
         - id: admin_metrics
           uri: http://${DEV_ENV_HOST_PROVIDER}:8081
           predicates:
-            - Path=/api/route-provider/metrics/admin/**
+            - Path=/api/data-provider/metrics/admin/**
 
         - id: security
           uri: http://${DEV_ENV_HOST_SECURITY}:8082
           predicates:
             - Path=/api/security-service/security/**
+
+        - id: photos
+          uri: http://${DEV_ENV_HOST_PROVIDER}:8081
+          predicates:
+            - Path=/api/data-provider/photos/**
 
 jwt:
   secret: ${JWT_SECRET}
