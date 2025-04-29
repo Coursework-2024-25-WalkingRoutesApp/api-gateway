@@ -1,0 +1,47 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - release
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Build JAR
+        run: ./gradlew clean bootJar -x test
+
+      - name: Verify JAR exists
+        run: ls -la build/libs/
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: Dockerfile
+          push: false
+          load: true
+          tags: user/api-gateway:latest
+          build-args: |
+            DEV_ENV_HOST_PROVIDER=${{ secrets.DEV_ENV_HOST_PROVIDER }}
+            DEV_ENV_HOST_SECURITY=${{ secrets.DEV_ENV_HOST_SECURITY }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            SERVER_PORT=${{ secrets.SERVER_PORT }}
+
+      - name: Deploy Docker container
+        run: |
+          docker run -d --network walking_routes_network --name api-gateway \
+            -e DEV_ENV_HOST_PROVIDER=${{ secrets.DEV_ENV_HOST_PROVIDER }} \
+            -e DEV_ENV_HOST_SECURITY=${{ secrets.DEV_ENV_HOST_SECURITY }} \
+            -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
+            -p ${{ secrets.SERVER_PORT_PUBLIC }}:${{ secrets.SERVER_PORT }} \
+            user/api-gateway:latest
