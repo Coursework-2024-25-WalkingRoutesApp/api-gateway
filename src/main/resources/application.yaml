@@ -8,6 +8,8 @@ spring:
           args:
             excludeRoutes:
               - "/api/security-service/security"
+              - "/v3/api-docs/data-provider"
+              - "/v3/api-docs/security-service"
       routes:
         - id: user_routes
           uri: http://${DEV_ENV_HOST_PROVIDER}:8081
@@ -58,6 +60,20 @@ spring:
           predicates:
             - Path=/api/data-provider/photos/**
 
+        - id: data-provider-api-docs
+          uri: http://${DEV_ENV_HOST_PROVIDER}:8081
+          predicates:
+            - Path=/v3/api-docs/data-provider
+          filters:
+            - RewritePath=/v3/api-docs/data-provider,/v3/api-docs
+
+        - id: security-service-api-docs
+          uri: http://${DEV_ENV_HOST_SECURITY}:8082
+          predicates:
+            - Path=/v3/api-docs/security-service
+          filters:
+            - RewritePath=/v3/api-docs/security-service, /v3/api-docs
+
 jwt:
   secret: ${JWT_SECRET}
 
@@ -73,3 +89,12 @@ management:
     metrics:
       export:
         enabled: true
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: data-provider
+        url: /v3/api-docs/data-provider
+      - name: security-service
+        url: /v3/api-docs/security-service
+    path: /swagger-ui.html

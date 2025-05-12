@@ -22,6 +22,7 @@ val kotlinVersion: String by project
 val kotlinTestJunit5Version: String by project
 val springBootStarterVersion: String by project
 val springCloudVersion: String by project
+val springDocVersion: String by project
 val jacksonModuleKotlinVersion: String by project
 val jjwtVersion: String by project
 val junitPlatformLauncherVersion: String by project
@@ -29,6 +30,8 @@ val micrometerJvmExtrasVersion: String by project
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux:$springBootStarterVersion")
+	implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:$springDocVersion")
+
 	implementation("io.jsonwebtoken:jjwt:$jjwtVersion")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonModuleKotlinVersion")
 	implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
