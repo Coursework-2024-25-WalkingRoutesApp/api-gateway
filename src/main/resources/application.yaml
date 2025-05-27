@@ -72,7 +72,7 @@ spring:
           predicates:
             - Path=/v3/api-docs/security-service
           filters:
-            - RewritePath=/v3/api-docs/security-service, /v3/api-docs
+            - RewritePath=/v3/api-docs/security-service,/v3/api-docs
 
 jwt:
   secret: ${JWT_SECRET}
