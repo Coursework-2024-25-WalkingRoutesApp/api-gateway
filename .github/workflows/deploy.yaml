@@ -1,11 +1,12 @@
-name: Deploy
+name: Build and Deploy
 
 on:
   workflow_dispatch:
 
 jobs:
-  deploy:
-    runs-on: self-hosted
+  build-and-push:
+    name: Build & Push Docker Image
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
@@ -29,14 +30,21 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build Docker image
+      - name: Log in to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image with version and latest
         uses: docker/build-push-action@v4
         with:
           context: .
           file: Dockerfile
-          push: false
-          load: true
-          tags: user/api-gateway:latest
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_IMAGE_FULL }}:api-gateway-${{ env.VERSION }}
+            ${{ secrets.DOCKER_IMAGE_FULL }}:api-gateway-latest
           build-args: |
             VERSION=${{ env.VERSION }}
             DEV_ENV_HOST_PROVIDER=${{ secrets.DEV_ENV_HOST_PROVIDER }}
@@ -44,14 +52,26 @@ jobs:
             JWT_SECRET=${{ secrets.JWT_SECRET }}
             SERVER_PORT=${{ secrets.SERVER_PORT }}
 
+  deploy:
+    name: Deploy on Self-Hosted Server
+    runs-on: self-hosted
+    needs: build-and-push
+
+    steps:
+      - name: Log in to DockerHub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
       - name: Stop and remove existing container (if any)
         run: docker rm -f api-gateway || true
 
-      - name: Deploy Docker container
+      - name: Pull image from DockerHub
+        run: docker pull ${{ secrets.DOCKER_IMAGE_FULL }}:api-gateway-latest
+
+      - name: Run Docker container
         run: |
           docker run -d --network walking_routes_network --name api-gateway \
             -e DEV_ENV_HOST_PROVIDER=${{ secrets.DEV_ENV_HOST_PROVIDER }} \
             -e DEV_ENV_HOST_SECURITY=${{ secrets.DEV_ENV_HOST_SECURITY }} \
             -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
             -p ${{ secrets.SERVER_PORT_PUBLIC }}:${{ secrets.SERVER_PORT }} \
-            user/api-gateway:latest
+            ${{ secrets.DOCKER_IMAGE_FULL }}:api-gateway-latest
