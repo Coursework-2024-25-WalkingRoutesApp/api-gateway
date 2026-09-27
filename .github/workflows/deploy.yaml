@@ -55,7 +55,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: self-hosted
+    runs-on: raspi
     steps:
       - name: Download image artifact
         uses: actions/download-artifact@v4
